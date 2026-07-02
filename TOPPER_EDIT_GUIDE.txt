@@ -1,0 +1,24 @@
+TOPPER SECTION EDIT GUIDE
+
+1. Topper name/marks edit:
+   - index.html ya toppers.html open karo
+   - "Student Name" ko real topper name se replace karo
+   - "Marks/Grade: 98%" ko real marks/grade se replace karo
+
+2. Photos edit:
+   - images folder open karo
+   - Class 1: class1-topper.svg
+   - Class 2: class2-topper.svg
+   - ...
+   - Class 8: class8-topper.svg
+
+   Apni real photo same naam se replace kar sakte ho.
+   Agar JPG/PNG use karni ho to HTML me src change karo:
+   Example: src="images/class1-topper.jpg"
+
+3. Website pages:
+   - Home page me Topper Section add hai
+   - Separate page: toppers.html
+
+4. Credit:
+   - Website Managed by Dhruv Pratap Singh
