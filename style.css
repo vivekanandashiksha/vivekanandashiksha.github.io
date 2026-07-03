@@ -366,3 +366,252 @@ background:#EA4335;
 bottom:30px;
 background:#4285F4;
 }
+/* ===================================
+   BUDHA AI
+=================================== */
+
+.ai-chat-button{
+position:fixed;
+left:20px;
+bottom:25px;
+background:linear-gradient(135deg,#041B38,#0B3D91);
+color:#fff;
+padding:14px 22px;
+border-radius:40px;
+font-weight:600;
+border:2px solid #D4AF37;
+cursor:pointer;
+box-shadow:0 12px 30px rgba(0,0,0,.25);
+transition:.35s;
+z-index:1000;
+}
+
+.ai-chat-button:hover{
+transform:translateY(-4px);
+background:#D4AF37;
+color:#041B38;
+}
+
+.ai-chat-box{
+position:fixed;
+left:20px;
+bottom:90px;
+width:370px;
+max-width:95%;
+background:#fff;
+border-radius:24px;
+overflow:hidden;
+display:none;
+box-shadow:0 18px 45px rgba(0,0,0,.25);
+border:2px solid #D4AF37;
+z-index:1000;
+}
+
+.ai-header{
+background:linear-gradient(135deg,#041B38,#0B3D91);
+color:#fff;
+padding:18px;
+font-size:18px;
+font-weight:700;
+text-align:center;
+}
+
+.ai-body{
+height:320px;
+overflow-y:auto;
+padding:16px;
+background:#F8FAFC;
+}
+
+.ai-msg{
+padding:12px 15px;
+margin:10px 0;
+border-radius:14px;
+font-size:15px;
+line-height:1.6;
+}
+
+.ai-bot{
+background:#fff;
+border-left:5px solid #D4AF37;
+}
+
+.ai-user{
+background:#0B3D91;
+color:#fff;
+margin-left:35px;
+}
+
+.ai-input{
+display:flex;
+gap:10px;
+padding:12px;
+background:#fff;
+}
+
+.ai-input input{
+flex:1;
+padding:12px;
+border-radius:12px;
+border:1px solid #ddd;
+outline:none;
+}
+
+.ai-input button{
+background:#D4AF37;
+color:#041B38;
+border:none;
+padding:12px 18px;
+border-radius:12px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* ===================================
+   TOPPERS
+=================================== */
+
+.toppers-section{
+padding:70px 20px;
+max-width:1200px;
+margin:auto;
+}
+
+.toppers-title{
+font-size:36px;
+text-align:center;
+color:#041B38;
+margin-bottom:12px;
+font-weight:700;
+}
+
+.toppers-subtitle{
+text-align:center;
+color:#666;
+margin-bottom:35px;
+}
+
+.toppers-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.topper-card{
+background:#fff;
+border-radius:24px;
+padding:25px;
+text-align:center;
+border-top:6px solid #D4AF37;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+transition:.35s;
+}
+
+.topper-card:hover{
+transform:translateY(-10px);
+box-shadow:0 20px 50px rgba(0,0,0,.18);
+}
+
+.topper-photo{
+width:130px;
+height:130px;
+margin:auto;
+border-radius:50%;
+border:5px solid #D4AF37;
+object-fit:cover;
+background:#fff;
+margin-bottom:18px;
+}
+
+.topper-card h3{
+font-size:22px;
+color:#041B38;
+margin-bottom:8px;
+}
+
+.topper-class{
+font-weight:600;
+color:#555;
+}
+
+.topper-marks{
+margin:10px 0;
+}
+
+.topper-rank{
+display:inline-block;
+padding:8px 16px;
+background:#041B38;
+color:#D4AF37;
+border-radius:25px;
+font-weight:700;
+}
+
+.topper-edit-note{
+margin-top:30px;
+padding:16px;
+background:#FFF8DC;
+border-left:5px solid #D4AF37;
+border-radius:12px;
+}
+
+/* ===================================
+   ICONS
+=================================== */
+
+i.fa-solid,
+i.fa-brands{
+margin-right:7px;
+}
+
+.float i{
+margin:0;
+}
+
+/* ===================================
+   MOBILE
+=================================== */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:30px;
+}
+
+.hero p{
+font-size:17px;
+}
+
+.hero-card{
+padding:25px;
+}
+
+.brand{
+width:100%;
+justify-content:center;
+}
+
+.links{
+justify-content:center;
+}
+
+.section{
+padding:22px;
+}
+
+.title{
+font-size:28px;
+}
+
+.ai-chat-box{
+width:95%;
+left:2.5%;
+}
+
+.float{
+width:50px;
+height:50px;
+font-size:20px;
+}
+
+}
