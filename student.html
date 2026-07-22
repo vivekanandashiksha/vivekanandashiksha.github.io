@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vivekananda Shiksha Niketan Junior High School</title>
+<title>Vivekanand Shiksha Niketan Junior High School</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -26,7 +26,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 <div class="splash-name">
 
 <h1>
-Vivekananda Shiksha Niketan
+Vivekanand Shiksha Niketan
 <br>
 Junior High School
 </h1>
@@ -54,7 +54,7 @@ Managed by Dhruv Pratap Singh
 <img src="logo.png">
 
 <span>
-Vivekananda Shiksha Niketan Junior High School
+Vivekanand Shiksha Niketan Junior High School
 </span>
 
 </a>
@@ -115,7 +115,7 @@ Smart Reward
 <img class="hero-logo" src="logo.png" alt="School Logo">
 
 <h1>
-Vivekananda Shiksha Niketan Junior High School
+Vivekanand Shiksha Niketan Junior High School
 </h1>
 
 <p>
@@ -329,7 +329,7 @@ Principal's Message
 
 <p>
 
-Welcome to <b>Vivekananda Shiksha Niketan Junior High School</b>.
+Welcome to <b>Vivekanand Shiksha Niketan Junior High School</b>.
 
 Our mission is to provide quality education, strong moral values, discipline and modern learning so that every student becomes confident, responsible and successful in life.
 
@@ -409,7 +409,7 @@ Students showing excellent discipline, attendance and academic performance recei
 <footer class="footer">
 
 <p>
-© 2026 Vivekananda Shiksha Niketan Junior High School
+© 2026 Vivekanand Shiksha Niketan Junior High School
 </p>
 
 <p class="managed">
@@ -471,7 +471,7 @@ Namaste!
 
 Main <b>BUDDHA AI</b> hoon.
 
-Main Vivekananda Shiksha Niketan Junior High School ka Digital Assistant hoon.
+Main Vivekanand Shiksha Niketan Junior High School ka Digital Assistant hoon.
 
 Main Admission, Fees, School Timing, Contact, Facilities, Notices aur Class 1–8 se sambandhit prashnon me aapki sahayata kar sakta hoon.
 
@@ -503,104 +503,6 @@ Ask
 BUDDHA AI
 
 </button>
-<script>
-
-function toggleAI(){
-const box=document.getElementById("aiChatBox");
-box.style.display=(box.style.display==="block")?"none":"block";
-}
-
-function addMsg(text,type){
-const body=document.getElementById("aiBody");
-const div=document.createElement("div");
-div.className="ai-msg "+type;
-div.innerHTML=text;
-body.appendChild(div);
-body.scrollTop=body.scrollHeight;
-}
-
-function askAI(){
-
-const input=document.getElementById("aiInput");
-const q=input.value.trim();
-
-if(q==="") return;
-
-addMsg(q,"ai-user");
-input.value="";
-
-setTimeout(()=>{
-addMsg(answer(q),"ai-bot");
-},300);
-
-}
-
-function answer(q){
-
-let s=q.toLowerCase();
-
-/* Admission */
-
-if(s.includes("admission")||s.includes("apply")||s.includes("form"))
-return "<b>Admission Open</b><br>Admissions are open for Classes 1 to 8. Please click on the Apply Online button or contact the school office.";
-
-/* Fees */
-
-if(s.includes("fee")||s.includes("fees"))
-return "<b>Fees Information</b><br>Please contact the school office on <b>9919811871</b> for the latest fee structure.";
-
-/* Timing */
-
-if(s.includes("time")||s.includes("timing"))
-return "<b>School Timing</b><br>Monday - Saturday : 08:00 AM to 02:00 PM<br>Sunday : Holiday";
-
-/* Contact */
-
-if(s.includes("contact")||s.includes("phone"))
-return "<b>Contact</b><br>Mobile : 9919811871<br>Email : vivekanandashiksha0508@gmail.com";
-
-/* Principal */
-
-if(s.includes("principal"))
-return "<b>Principal</b><br>Mrs. Rachna Singh";
-
-/* Manager */
-
-if(s.includes("manager"))
-return "<b>Manager</b><br>Mr. Shishupal Singh";
-
-/* UDISE */
-
-if(s.includes("udise"))
-return "<b>UDISE Code</b><br>09330801622";
-
-/* Homework */
-
-if(s.includes("homework"))
-return "Please contact your class teacher for homework details.";
-
-/* Result */
-
-if(s.includes("result"))
-return "Results are announced by the school office. Please contact your class teacher.";
-
-/* Maths */
-
-let m=s.replace(/×/g,"*").replace(/÷/g,"/");
-
-if(/^[0-9+\-*/(). ]+$/.test(m)){
-
-try{
-return "<b>Answer</b><br>"+Function("return "+m)();
-}catch(e){}
-
-}
-
-return "Namaste! Main <b>BUDDHA AI</b> hoon. Main school se sambandhit prashnon me aapki sahayata kar sakta hoon.";
-
-}
-
-</script>
 <script>
 
 function toggleAI(){
@@ -816,7 +718,7 @@ Committed to providing quality education and the overall development of every st
 
 Admissions Open for Classes 1 to 8 &nbsp;&nbsp; | &nbsp;&nbsp;
 School Timing: 08:00 AM – 02:00 PM &nbsp;&nbsp; | &nbsp;&nbsp;
-Welcome to Vivekananda Shiksha Niketan Junior High School
+Welcome to Vivekanand Shiksha Niketan Junior High School
 
 </marquee>
 
@@ -829,7 +731,7 @@ Welcome to Vivekananda Shiksha Niketan Junior High School
 
 window.addEventListener("load",function(){
 
-console.log("Vivekananda Shiksha Niketan Junior High School Loaded Successfully");
+console.log("Vivekanand Shiksha Niketan Junior High School Loaded Successfully");
 
 });
 
