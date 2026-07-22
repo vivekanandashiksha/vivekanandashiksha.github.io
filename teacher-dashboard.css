@@ -1,1 +1,681 @@
+/* ==========================================================================
+   Teacher Dashboard — Vivekanand Shiksha Niketan Junior High School
+   A ledger-inspired dashboard: navy register spine + brass tab accents,
+   built for fast daily reading of student, attendance and result data.
+   ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --ink:        #1F2430;
+  --ink-soft:   #4B5265;
+  --paper:      #F6F4EE;
+  --paper-card: #FFFFFF;
+  --line:       #E3DED2;
+
+  --navy:       #16223F;
+  --navy-soft:  #223257;
+  --brass:      #C9A227;
+  --brass-soft: #E7CE86;
+
+  --blue:   #2E5AAC;
+  --green:  #2F6B4F;
+  --orange: #C1701F;
+  --red:    #B23A3A;
+
+  --radius: 14px;
+  --shadow: 0 2px 10px rgba(22,34,63,0.06), 0 10px 30px rgba(22,34,63,0.05);
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, Segoe UI, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Sidebar — styled as a register spine: a vertical strip with tabbed items
+   ========================================================================== */
+
+.sidebar{
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--navy);
+  color: #EDE9DC;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar .logo{
+  padding: 28px 22px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+  text-align: center;
+}
+
+.sidebar .logo img{
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+}
+
+.sidebar .logo h2{
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  margin: 12px 0 4px;
+  letter-spacing: 0.2px;
+}
+
+.sidebar .logo p{
+  font-size: 11.5px;
+  color: #AEB6CE;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.sidebar ul{
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 6px 0;
+  flex: 1;
+}
+
+.sidebar li{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #C7CCDE;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar li i{
+  width: 18px;
+  text-align: center;
+  color: #8891AC;
+  transition: color 0.15s ease;
+}
+
+.sidebar li:hover{
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+.sidebar li.active{
+  background: var(--navy-soft);
+  color: #fff;
+  border-left-color: var(--brass);
+}
+
+.sidebar li.active i{
+  color: var(--brass);
+}
+
+/* the register "tab" notch on the active item */
+.sidebar li.active::after{
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 22px;
+  background: var(--paper);
+  border-radius: 6px 0 0 6px;
+}
+
+/* ==========================================================================
+   Main content
+   ========================================================================== */
+
+.main{
+  flex: 1;
+  min-width: 0;
+  padding: 26px 32px 60px;
+}
+
+.main header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.main header h1{
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--navy);
+}
+
+.main header p{
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.teacher-box{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 18px 6px 6px;
+  box-shadow: var(--shadow);
+}
+
+.teacher-box img{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--paper);
+}
+
+.teacher-box h3{
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.teacher-box p{
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Stat cards
+   ========================================================================== */
+
+.dashboard-cards{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.card{
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 20px 18px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+
+.card i{
+  font-size: 20px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.card h2{
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  color: var(--navy);
+}
+
+.card p{
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.card.blue::before,   .card.blue i   { color: var(--blue); }
+.card.blue::before    { background: var(--blue); }
+.card.green::before,  .card.green i { color: var(--green); }
+.card.green::before   { background: var(--green); }
+.card.orange::before, .card.orange i{ color: var(--orange); }
+.card.orange::before  { background: var(--orange); }
+.card.red::before,    .card.red i   { color: var(--red); }
+.card.red::before     { background: var(--red); }
+
+/* ==========================================================================
+   Welcome panel
+   ========================================================================== */
+
+.welcome-panel{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: var(--navy);
+  color: #EDE9DC;
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  margin-bottom: 28px;
+}
+
+.welcome-text h2{
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.welcome-text p{
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #C7CCDE;
+  max-width: 560px;
+}
+
+.welcome-text b{
+  color: var(--brass-soft);
+}
+
+.school-logo img{
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 50%;
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Quick actions
+   ========================================================================== */
+
+.quick-actions{ margin-bottom: 30px; }
+
+.quick-actions h2,
+.student-management h2,
+.student-form h2,
+.attendance-section h2,
+.homework-section h2,
+.result-section h2{
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+.quick-actions h2 i,
+.student-management h2 i,
+.student-form h2 i,
+.attendance-section h2 i,
+.homework-section h2 i,
+.result-section h2 i{
+  color: var(--brass);
+  font-size: 16px;
+}
+
+.action-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.action-card{
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-card:hover{
+  transform: translateY(-3px);
+  border-color: var(--brass-soft);
+  box-shadow: var(--shadow);
+}
+
+.action-card i{
+  font-size: 22px;
+  color: var(--navy);
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.action-card h3{
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   Section wrappers (student mgmt, form, attendance, homework, result)
+   ========================================================================== */
+
+.student-management,
+.student-form,
+.attendance-section,
+.homework-section,
+.result-section{
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 26px 28px;
+  margin-bottom: 26px;
+  box-shadow: var(--shadow);
+}
+
+/* toolbar / search */
+
+.student-toolbar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.search-box{
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 16px;
+}
+
+.search-box i{ color: var(--ink-soft); }
+
+.search-box input{
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  width: 100%;
+  color: var(--ink);
+}
+
+.add-btn,
+.save-btn,
+.attendance-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.add-btn:hover,
+.save-btn:hover,
+.attendance-btn:hover{
+  background: var(--navy-soft);
+}
+
+.reset-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reset-btn:hover{ border-color: var(--red); color: var(--red); }
+
+/* ==========================================================================
+   Tables — ledger styling with monospace data columns
+   ========================================================================== */
+
+.student-table,
+.attendance-section table,
+.result-section table{
+  overflow-x: auto;
+}
+
+table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead th{
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--navy);
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+tbody td{
+  padding: 12px;
+  border-bottom: 1px dashed var(--line);
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+tbody tr:hover{ background: var(--paper); }
+
+.student-photo{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--paper);
+}
+
+td, th{
+  font-variant-numeric: tabular-nums;
+}
+
+tbody td:nth-child(1),
+tbody td:has(> input[type="radio"]){
+  font-family: var(--font-mono);
+}
+
+.view-btn, .edit-btn, .delete-btn{
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  margin-right: 4px;
+  transition: all 0.15s ease;
+}
+
+.view-btn:hover{ border-color: var(--blue); color: var(--blue); }
+.edit-btn:hover{ border-color: var(--orange); color: var(--orange); }
+.delete-btn:hover{ border-color: var(--red); color: var(--red); }
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.form-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 12px;
+  background: var(--paper);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group textarea{ resize: vertical; }
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.18);
+}
+
+.save-area{
+  display: flex;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.attendance-top{
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.attendance-top select,
+.attendance-top input{
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 12px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* radio inputs in attendance table */
+input[type="radio"]{
+  accent-color: var(--navy);
+  width: 16px;
+  height: 16px;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 1100px){
+  .dashboard-cards{ grid-template-columns: repeat(2, 1fr); }
+  .action-grid{ grid-template-columns: repeat(2, 1fr); }
+  .form-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 860px){
+  body{ flex-direction: column; }
+  .sidebar{
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .sidebar .logo{ display: none; }
+  .sidebar ul{ display: flex; padding: 8px; }
+  .sidebar li{
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .sidebar li.active{ border-bottom-color: var(--brass); }
+  .sidebar li.active::after{ display: none; }
+  .main{ padding: 20px; }
+  .welcome-panel{ flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 560px){
+  .dashboard-cards{ grid-template-columns: 1fr; }
+  .action-grid{ grid-template-columns: 1fr; }
+  .form-grid{ grid-template-columns: 1fr; }
+  .student-toolbar{ flex-direction: column; align-items: stretch; }
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+li:focus-visible{
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; }
+}
