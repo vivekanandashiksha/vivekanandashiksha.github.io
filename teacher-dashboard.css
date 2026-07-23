@@ -326,7 +326,13 @@ body{
 .student-form h2,
 .attendance-section h2,
 .homework-section h2,
-.result-section h2{
+.result-section h2,
+.teacher-management h2,
+.marksheet-section h2,
+.fees-section h2,
+.notice-section h2,
+.gallery-section h2,
+.settings-section h2{
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 600;
@@ -342,7 +348,13 @@ body{
 .student-form h2 i,
 .attendance-section h2 i,
 .homework-section h2 i,
-.result-section h2 i{
+.result-section h2 i,
+.teacher-management h2 i,
+.marksheet-section h2 i,
+.fees-section h2 i,
+.notice-section h2 i,
+.gallery-section h2 i,
+.settings-section h2 i{
   color: var(--brass);
   font-size: 16px;
 }
@@ -391,7 +403,13 @@ body{
 .student-form,
 .attendance-section,
 .homework-section,
-.result-section{
+.result-section,
+.teacher-management,
+.marksheet-section,
+.fees-section,
+.notice-section,
+.gallery-section,
+.settings-section{
   background: var(--paper-card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -625,6 +643,95 @@ input[type="radio"]{
 }
 
 /* ==========================================================================
+   Notice Board
+   ========================================================================== */
+
+.notice-list{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.notice-card{
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--brass);
+  border-radius: 10px;
+  padding: 16px 46px 16px 18px;
+}
+
+.notice-card-header{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  color: var(--navy);
+}
+
+.notice-card-header span{
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+.notice-card p{
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.notice-card .delete-btn{
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+/* ==========================================================================
+   Gallery
+   ========================================================================== */
+
+.gallery-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.gallery-item{
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.gallery-item img{
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-item p{
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.gallery-item .delete-btn{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.9);
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 
@@ -632,6 +739,7 @@ input[type="radio"]{
   .dashboard-cards{ grid-template-columns: repeat(2, 1fr); }
   .action-grid{ grid-template-columns: repeat(2, 1fr); }
   .form-grid{ grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid{ grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 860px){
@@ -660,6 +768,7 @@ input[type="radio"]{
   .dashboard-cards{ grid-template-columns: 1fr; }
   .action-grid{ grid-template-columns: 1fr; }
   .form-grid{ grid-template-columns: 1fr; }
+  .gallery-grid{ grid-template-columns: repeat(2, 1fr); }
   .student-toolbar{ flex-direction: column; align-items: stretch; }
 }
 
