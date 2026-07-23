@@ -643,6 +643,262 @@ input[type="radio"]{
 }
 
 /* ==========================================================================
+   Printable Marksheet — classic certificate style
+   ========================================================================== */
+
+.marksheet-card{
+  position: relative;
+  margin-top: 20px;
+  background: #FFFEF9;
+  border: 3px double var(--navy);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.marksheet-card::before{
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--brass);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.marksheet-inner{
+  position: relative;
+  padding: 26px 34px 22px;
+}
+
+.marksheet-watermark{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.marksheet-watermark img{
+  width: 340px;
+  height: 340px;
+  object-fit: contain;
+  opacity: 0.06;
+}
+
+.marksheet-head{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 6px;
+}
+
+.marksheet-head img{
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.marksheet-head h2{
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.3px;
+}
+
+.marksheet-head p{
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.2px;
+}
+
+.marksheet-divider{
+  position: relative;
+  height: 14px;
+  margin: 10px 0 18px;
+  text-align: center;
+}
+
+.marksheet-divider::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  border-top: 2px solid var(--brass);
+}
+
+.marksheet-divider span{
+  position: relative;
+  background: #FFFEF9;
+  padding: 0 14px;
+  color: var(--brass);
+  font-size: 13px;
+}
+
+.marksheet-title{
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin: 0 0 18px;
+}
+
+.marksheet-info{
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 18px;
+}
+
+.marksheet-info td{
+  border: 1px solid var(--line);
+  padding: 9px 14px;
+  font-size: 12.5px;
+  vertical-align: top;
+  background: rgba(255,255,255,0.7);
+}
+
+.marksheet-info td b{
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.marksheet-marks{
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.marksheet-marks th,
+.marksheet-marks td{
+  border: 1px solid var(--navy);
+  padding: 9px 14px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.marksheet-marks th{
+  background: var(--navy);
+  color: #fff;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.marksheet-marks td:first-child{ text-align: left; font-weight: 500; }
+.marksheet-marks tfoot td{ background: var(--brass-soft); font-family: var(--font-mono); }
+
+.marksheet-summary{
+  position: relative;
+  display: flex;
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.marksheet-summary div{
+  flex: 1;
+  text-align: center;
+  border: 1px solid var(--navy);
+  border-radius: 6px;
+  padding: 10px;
+  background: rgba(255,255,255,0.7);
+}
+
+.marksheet-summary span{
+  display: block;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.marksheet-summary b{
+  font-family: var(--font-mono);
+  font-size: 19px;
+  color: var(--navy);
+}
+
+.marksheet-signatures{
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.marksheet-seal{
+  width: 74px;
+  height: 74px;
+  border: 2px dashed var(--brass);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  color: var(--brass);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+.marksheet-signatures div.sign-block{
+  flex: 1;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+.marksheet-signatures .line{
+  display: block;
+  border-top: 1px solid var(--ink-soft);
+  margin-bottom: 6px;
+  padding-top: 30px;
+}
+
+.marksheet-footer{
+  position: relative;
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-soft);
+  margin: 0;
+  font-style: italic;
+}
+
+@media print{
+  body *{ visibility: hidden; }
+  .marksheet-print-area, .marksheet-print-area *{ visibility: visible; }
+  .marksheet-print-area{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
    Notice Board
    ========================================================================== */
 
