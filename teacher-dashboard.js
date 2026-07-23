@@ -266,7 +266,7 @@ function addStudent(form) {
     section: inputs[7].value.trim(),
     roll: inputs[8].value.trim(),
     sr: inputs[9].value.trim(),
-    admissionNo: inputs[10].value.trim(),
+    studentUdise: inputs[10].value.trim(),
     mobile: inputs[11].value.trim(),
     address: form.querySelector("textarea").value.trim()
   };
@@ -633,24 +633,28 @@ function generateMarksheet() {
 
   output.innerHTML =
     '<div class="marksheet-card">' +
+      '<div class="marksheet-watermark"><img src="logo.png" alt=""></div>' +
+      '<div class="marksheet-inner">' +
+
       '<div class="marksheet-head">' +
         '<img src="logo.png" alt="School Logo">' +
-        '<div>' +
-          '<h2>Vivekanand Shiksha Niketan Junior High School</h2>' +
-          '<p>English Medium School | Classes 1 to 8 | UDISE: 09330801622</p>' +
-          '<p>Aazad Nagar, Sikandra, Kanpur Dehat, Uttar Pradesh</p>' +
-        '</div>' +
+        '<h2>Vivekanand Shiksha Niketan Junior High School</h2>' +
+        '<p>English Medium School &nbsp;|&nbsp; Classes 1 to 8 &nbsp;|&nbsp; School UDISE: 09330801622</p>' +
+        '<p>Aazad Nagar, Sikandra, Kanpur Dehat, Uttar Pradesh</p>' +
       '</div>' +
 
-      '<h3 class="marksheet-title">Report Card / Marksheet — ' + (record.exam || "") + '</h3>' +
+      '<div class="marksheet-divider"><span>❖</span></div>' +
+
+      '<h3 class="marksheet-title">Report Card — ' + (record.exam || "") + '</h3>' +
 
       '<table class="marksheet-info">' +
-        '<tr><td><b>Student Name</b><br>' + (student.name || "-") + '</td>' +
-        '<td><b>Father\'s Name</b><br>' + (student.father || "-") + '</td>' +
-        '<td><b>Mother\'s Name</b><br>' + (student.mother || "-") + '</td></tr>' +
-        '<tr><td><b>Class / Section</b><br>' + (student.className || "-") + ' - ' + (student.section || "-") + '</td>' +
-        '<td><b>Roll No.</b><br>' + (student.roll || "-") + '</td>' +
-        '<td><b>Session</b><br>' + (record.session || "-") + '</td></tr>' +
+        '<tr><td><b>Student Name</b>' + (student.name || "-") + '</td>' +
+        '<td><b>Father\'s Name</b>' + (student.father || "-") + '</td>' +
+        '<td><b>Mother\'s Name</b>' + (student.mother || "-") + '</td></tr>' +
+        '<tr><td><b>Class / Section</b>' + (student.className || "-") + ' - ' + (student.section || "-") + '</td>' +
+        '<td><b>Roll No.</b>' + (student.roll || "-") + '</td>' +
+        '<td><b>Session</b>' + (record.session || "-") + '</td></tr>' +
+        '<tr><td colspan="3"><b>Student UDISE Number</b>' + (student.studentUdise || "-") + '</td></tr>' +
       '</table>' +
 
       '<table class="marksheet-marks">' +
@@ -666,12 +670,15 @@ function generateMarksheet() {
       '</div>' +
 
       '<div class="marksheet-signatures">' +
-        '<div><span class="line"></span>Class Teacher</div>' +
-        '<div><span class="line"></span>Principal</div>' +
-        '<div><span class="line"></span>Parent/Guardian</div>' +
+        '<div class="sign-block"><span class="line"></span>Class Teacher</div>' +
+        '<div class="marksheet-seal">School<br>Seal</div>' +
+        '<div class="sign-block"><span class="line"></span>Principal</div>' +
+        '<div class="sign-block"><span class="line"></span>Parent/Guardian</div>' +
       '</div>' +
 
       '<p class="marksheet-footer">Generated on ' + today + ' — Vivekanand Shiksha Niketan Junior High School</p>' +
+
+      '</div>' +
     '</div>';
 }
 
