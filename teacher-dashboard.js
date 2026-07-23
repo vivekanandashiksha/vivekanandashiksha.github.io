@@ -18,6 +18,10 @@ let students   = [];
 let attendance = [];
 let homework   = [];
 let results    = [];
+let teachers   = [];
+let fees       = [];
+let notices    = [];
+let gallery    = [];
 
 // ---------- On page load ----------
 
@@ -29,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     students = Object.keys(val).map(key => Object.assign({ key: key }, val[key]));
     renderStudentTable();
     renderDashboardCounts();
+    populateFeeStudentDropdown();
   });
 
   db.ref("attendance").on("value", function (snap) {
@@ -46,6 +51,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const val = snap.val() || {};
     results = Object.keys(val).map(key => Object.assign({ key: key }, val[key]));
     renderDashboardCounts();
+  });
+
+  db.ref("teachers").on("value", function (snap) {
+    const val = snap.val() || {};
+    teachers = Object.keys(val).map(key => Object.assign({ key: key }, val[key]));
+    renderTeacherTable();
+    renderDashboardCounts();
+  });
+
+  db.ref("fees").on("value", function (snap) {
+    const val = snap.val() || {};
+    fees = Object.keys(val).map(key => Object.assign({ key: key }, val[key]));
+    renderFeesTable();
+  });
+
+  db.ref("notices").on("value", function (snap) {
+    const val = snap.val() || {};
+    notices = Object.keys(val).map(key => Object.assign({ key: key }, val[key]));
+    renderNoticeList();
+  });
+
+  db.ref("gallery").on("value", function (snap) {
+    const val = snap.val() || {};
+    gallery = Object.keys(val).map(key => Object.assign({ key: key }, val[key]));
+    renderGalleryGrid();
+  });
+
+  db.ref("settings").on("value", function (snap) {
+    const val = snap.val() || {};
+    fillSettingsForm(val);
   });
 
   const addStudentBtn = document.querySelector(".student-toolbar .add-btn");
@@ -85,9 +120,80 @@ document.addEventListener("DOMContentLoaded", function () {
     homeworkSaveBtn.addEventListener("click", saveHomework);
   }
 
-  const resultSaveBtn = document.querySelector(".result-section .save-btn");
+  const resultSaveBtn = document.getElementById("saveResultBtn");
   if (resultSaveBtn) {
     resultSaveBtn.addEventListener("click", saveResult);
+  }
+
+  const addSubjectRowBtn = document.getElementById("addSubjectRowBtn");
+  if (addSubjectRowBtn) {
+    addSubjectRowBtn.addEventListener("click", addSubjectRow);
+  }
+
+  const resultSubjectBody = document.getElementById("resultSubjectBody");
+  if (resultSubjectBody) {
+    resultSubjectBody.addEventListener("click", function (e) {
+      const btn = e.target.closest(".remove-subject-row");
+      if (btn) {
+        const rows = resultSubjectBody.querySelectorAll("tr");
+        if (rows.length > 1) {
+          btn.closest("tr").remove();
+        } else {
+          alert("At least one subject row is required.");
+        }
+      }
+    });
+  }
+
+  const teacherForm = document.getElementById("teacherForm");
+  if (teacherForm) {
+    teacherForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      saveTeacher();
+    });
+  }
+
+  const generateMarksheetBtn = document.getElementById("generateMarksheetBtn");
+  if (generateMarksheetBtn) {
+    generateMarksheetBtn.addEventListener("click", generateMarksheet);
+  }
+
+  const printMarksheetBtn = document.getElementById("printMarksheetBtn");
+  if (printMarksheetBtn) {
+    printMarksheetBtn.addEventListener("click", function () { window.print(); });
+  }
+
+  const feesForm = document.getElementById("feesForm");
+  if (feesForm) {
+    feesForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      saveFee();
+    });
+    populateFeeStudentDropdown();
+  }
+
+  const noticeForm = document.getElementById("noticeForm");
+  if (noticeForm) {
+    noticeForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      saveNotice();
+    });
+  }
+
+  const galleryForm = document.getElementById("galleryForm");
+  if (galleryForm) {
+    galleryForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      saveGalleryItem();
+    });
+  }
+
+  const settingsForm = document.getElementById("settingsForm");
+  if (settingsForm) {
+    settingsForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      saveSettings();
+    });
   }
 
   // Sidebar navigation: click a menu item to scroll to its section
@@ -99,14 +205,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const sectionMap = [
         null, // Dashboard -> top
         ".student-management",
-        null, // Teachers (not built yet)
+        ".teacher-management",
         ".attendance-section",
         ".result-section",
-        null, // Marksheet (not built yet)
-        null, // Fees (not built yet)
-        null, // Notice Board (not built yet)
-        null, // Gallery (not built yet)
-        null, // Settings (not built yet)
+        ".marksheet-section",
+        ".fees-section",
+        ".notice-section",
+        ".gallery-section",
+        ".settings-section",
         null  // Logout
       ];
 
@@ -140,7 +246,7 @@ function renderDashboardCounts() {
     : 0;
 
   cards[0].textContent = students.length;
-  cards[1].textContent = "0"; // Teacher records not managed on this page
+  cards[1].textContent = teachers.length;
   cards[2].textContent = attendancePercent + "%";
   cards[3].textContent = results.length;
 }
@@ -344,31 +450,445 @@ function saveHomework() {
     });
 }
 
-// ---------- Results ----------
+// ---------- Results (subject-wise) ----------
+
+function addSubjectRow() {
+  const tbody = document.getElementById("resultSubjectBody");
+  const row = document.createElement("tr");
+  row.innerHTML =
+    '<td><input type="text" class="subject-name" placeholder="e.g. Mathematics"></td>' +
+    '<td><input type="number" class="subject-obtained" style="width:80px;"></td>' +
+    '<td><input type="number" class="subject-max" style="width:80px;" value="100"></td>' +
+    '<td><button type="button" class="delete-btn remove-subject-row"><i class="fa-solid fa-trash"></i></button></td>';
+  tbody.appendChild(row);
+}
+
+function computeGrade(percentage) {
+  if (percentage >= 90) return "A+";
+  if (percentage >= 75) return "A";
+  if (percentage >= 60) return "B";
+  if (percentage >= 45) return "C";
+  if (percentage >= 33) return "D";
+  return "F";
+}
 
 function saveResult() {
-  const section = document.querySelector(".result-section");
-  const inputs = section.querySelectorAll(".form-group input");
-  const selects = section.querySelectorAll(".form-group select");
+  const roll = document.getElementById("resultRoll").value.trim();
+  const session = document.getElementById("resultSession").value.trim();
+  const exam = document.getElementById("resultExam").value;
+  const className = document.getElementById("resultClass").value;
+  const section = document.getElementById("resultSection").value;
 
-  const record = {
-    session: inputs[0] ? inputs[0].value.trim() : "",
-    exam: selects[0] ? selects[0].value : "",
-    className: selects[1] ? selects[1].value : "",
-    section: selects[2] ? selects[2].value : ""
-  };
-
-  if (!record.session) {
+  if (!roll) {
+    alert("Please enter the student's roll number.");
+    return;
+  }
+  if (!session) {
     alert("Please enter the session (e.g. 2026-2027).");
     return;
   }
 
+  const student = students.find(s => s.roll === roll && s.className === className);
+
+  const rows = document.querySelectorAll("#resultSubjectBody tr");
+  const subjects = [];
+  let totalObtained = 0;
+  let totalMax = 0;
+
+  rows.forEach(function (row) {
+    const name = row.querySelector(".subject-name").value.trim();
+    const obtained = parseFloat(row.querySelector(".subject-obtained").value) || 0;
+    const max = parseFloat(row.querySelector(".subject-max").value) || 0;
+    if (name) {
+      subjects.push({ subject: name, obtained: obtained, max: max });
+      totalObtained += obtained;
+      totalMax += max;
+    }
+  });
+
+  if (subjects.length === 0) {
+    alert("Please add at least one subject with marks.");
+    return;
+  }
+
+  const percentage = totalMax > 0 ? Math.round((totalObtained / totalMax) * 1000) / 10 : 0;
+  const grade = computeGrade(percentage);
+
+  const record = {
+    roll: roll,
+    studentName: student ? student.name : "",
+    session: session,
+    exam: exam,
+    className: className,
+    section: section,
+    subjects: subjects,
+    totalObtained: totalObtained,
+    totalMax: totalMax,
+    percentage: percentage,
+    grade: grade
+  };
+
   db.ref("results").push(record)
     .then(function () {
-      alert("Result entry saved for " + record.className + " — " + record.exam + ".");
+      alert("Result saved for Roll No. " + roll + " (" + percentage + "% — Grade " + grade + ").");
     })
     .catch(function (err) {
       alert("Could not save result: " + err.message);
+    });
+}
+
+// ---------- Teacher Management ----------
+
+function saveTeacher() {
+  const name = document.getElementById("teacherName").value.trim();
+  const subject = document.getElementById("teacherSubject").value.trim();
+  const mobile = document.getElementById("teacherMobile").value.trim();
+  const classTeacherOf = document.getElementById("teacherClass").value;
+
+  if (!name) {
+    alert("Please enter the teacher's name.");
+    return;
+  }
+
+  db.ref("teachers").push({ name, subject, mobile, classTeacherOf })
+    .then(function () {
+      document.getElementById("teacherForm").reset();
+      alert("Teacher record saved.");
+    })
+    .catch(function (err) {
+      alert("Could not save teacher: " + err.message);
+    });
+}
+
+function renderTeacherTable() {
+  const tbody = document.getElementById("teacherTableBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  if (teachers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#8891AC;">No teachers added yet.</td></tr>';
+    return;
+  }
+
+  teachers.forEach(function (t) {
+    const row = document.createElement("tr");
+    row.innerHTML =
+      "<td>" + (t.name || "") + "</td>" +
+      "<td>" + (t.subject || "") + "</td>" +
+      "<td>" + (t.mobile || "") + "</td>" +
+      "<td>" + (t.classTeacherOf || "") + "</td>" +
+      '<td><button class="delete-btn" data-key="' + t.key + '"><i class="fa-solid fa-trash"></i></button></td>';
+    tbody.appendChild(row);
+  });
+
+  tbody.querySelectorAll(".delete-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (confirm("Remove this teacher record?")) {
+        db.ref("teachers/" + btn.getAttribute("data-key")).remove();
+      }
+    });
+  });
+}
+
+// ---------- Marksheet Generator ----------
+
+function generateMarksheet() {
+  const roll = document.getElementById("marksheetRoll").value.trim();
+  const className = document.getElementById("marksheetClass").value;
+  const session = document.getElementById("marksheetSession").value.trim();
+  const output = document.getElementById("marksheetOutput");
+
+  if (!roll) {
+    alert("Please enter a roll number.");
+    return;
+  }
+
+  const student = students.find(s => s.roll === roll && s.className === className);
+
+  if (!student) {
+    output.innerHTML = '<p style="color:#8891AC;padding:16px 0;">No student found with this roll number in the selected class.</p>';
+    return;
+  }
+
+  const matches = results.filter(function (r) {
+    return r.roll === roll && r.className === className && (!session || r.session === session);
+  });
+
+  if (matches.length === 0) {
+    output.innerHTML = '<p style="color:#8891AC;padding:16px 0;">No result entry found yet for this student/session. Add one in Result &amp; Examination first.</p>';
+    return;
+  }
+
+  // Use the most recently saved matching result
+  const record = matches[matches.length - 1];
+
+  let subjectRows = "";
+  (record.subjects || []).forEach(function (s) {
+    const pct = s.max > 0 ? Math.round((s.obtained / s.max) * 1000) / 10 : 0;
+    subjectRows += "<tr><td>" + s.subject + "</td><td>" + s.max + "</td><td>" + s.obtained + "</td><td>" + computeGrade(pct) + "</td></tr>";
+  });
+
+  const today = new Date().toLocaleDateString("en-GB");
+
+  output.innerHTML =
+    '<div class="marksheet-card">' +
+      '<div class="marksheet-head">' +
+        '<img src="logo.png" alt="School Logo">' +
+        '<div>' +
+          '<h2>Vivekanand Shiksha Niketan Junior High School</h2>' +
+          '<p>English Medium School | Classes 1 to 8 | UDISE: 09330801622</p>' +
+          '<p>Aazad Nagar, Sikandra, Kanpur Dehat, Uttar Pradesh</p>' +
+        '</div>' +
+      '</div>' +
+
+      '<h3 class="marksheet-title">Report Card / Marksheet — ' + (record.exam || "") + '</h3>' +
+
+      '<table class="marksheet-info">' +
+        '<tr><td><b>Student Name</b><br>' + (student.name || "-") + '</td>' +
+        '<td><b>Father\'s Name</b><br>' + (student.father || "-") + '</td>' +
+        '<td><b>Mother\'s Name</b><br>' + (student.mother || "-") + '</td></tr>' +
+        '<tr><td><b>Class / Section</b><br>' + (student.className || "-") + ' - ' + (student.section || "-") + '</td>' +
+        '<td><b>Roll No.</b><br>' + (student.roll || "-") + '</td>' +
+        '<td><b>Session</b><br>' + (record.session || "-") + '</td></tr>' +
+      '</table>' +
+
+      '<table class="marksheet-marks">' +
+        '<thead><tr><th>Subject</th><th>Max Marks</th><th>Marks Obtained</th><th>Grade</th></tr></thead>' +
+        '<tbody>' + subjectRows + '</tbody>' +
+        '<tfoot><tr><td><b>Total</b></td><td><b>' + record.totalMax + '</b></td><td><b>' + record.totalObtained + '</b></td><td><b>' + record.grade + '</b></td></tr></tfoot>' +
+      '</table>' +
+
+      '<div class="marksheet-summary">' +
+        '<div><span>Percentage</span><b>' + record.percentage + '%</b></div>' +
+        '<div><span>Overall Grade</span><b>' + record.grade + '</b></div>' +
+        '<div><span>Result</span><b>' + (record.percentage >= 33 ? "PASS" : "FAIL") + '</b></div>' +
+      '</div>' +
+
+      '<div class="marksheet-signatures">' +
+        '<div><span class="line"></span>Class Teacher</div>' +
+        '<div><span class="line"></span>Principal</div>' +
+        '<div><span class="line"></span>Parent/Guardian</div>' +
+      '</div>' +
+
+      '<p class="marksheet-footer">Generated on ' + today + ' — Vivekanand Shiksha Niketan Junior High School</p>' +
+    '</div>';
+}
+
+// ---------- Fees Management ----------
+
+function populateFeeStudentDropdown() {
+  const select = document.getElementById("feeStudent");
+  if (!select) return;
+
+  const currentValue = select.value;
+  select.innerHTML = '<option value="">Select Student</option>';
+
+  students.forEach(function (s) {
+    const opt = document.createElement("option");
+    opt.value = s.key;
+    opt.textContent = s.name + " (Class " + s.className + ", Roll " + s.roll + ")";
+    select.appendChild(opt);
+  });
+
+  select.value = currentValue;
+}
+
+function saveFee() {
+  const studentKey = document.getElementById("feeStudent").value;
+  const month = document.getElementById("feeMonth").value;
+  const amount = document.getElementById("feeAmount").value;
+  const status = document.getElementById("feeStatus").value;
+
+  if (!studentKey) {
+    alert("Please select a student.");
+    return;
+  }
+
+  const student = students.find(s => s.key === studentKey);
+
+  db.ref("fees").push({
+    studentKey,
+    studentName: student ? student.name : "",
+    month,
+    amount,
+    status
+  })
+    .then(function () {
+      document.getElementById("feesForm").reset();
+      alert("Fee record saved.");
+    })
+    .catch(function (err) {
+      alert("Could not save fee record: " + err.message);
+    });
+}
+
+function renderFeesTable() {
+  const tbody = document.getElementById("feesTableBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  if (fees.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#8891AC;">No fee records yet.</td></tr>';
+    return;
+  }
+
+  fees.forEach(function (f) {
+    const row = document.createElement("tr");
+    const statusColor = f.status === "Paid" ? "var(--green)" : "var(--red)";
+    row.innerHTML =
+      "<td>" + (f.studentName || "") + "</td>" +
+      "<td>" + (f.month || "") + "</td>" +
+      "<td>₹" + (f.amount || "0") + "</td>" +
+      '<td style="color:' + statusColor + ';font-weight:600;">' + (f.status || "") + "</td>" +
+      '<td><button class="delete-btn" data-key="' + f.key + '"><i class="fa-solid fa-trash"></i></button></td>';
+    tbody.appendChild(row);
+  });
+
+  tbody.querySelectorAll(".delete-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (confirm("Remove this fee record?")) {
+        db.ref("fees/" + btn.getAttribute("data-key")).remove();
+      }
+    });
+  });
+}
+
+// ---------- Notice Board ----------
+
+function saveNotice() {
+  const title = document.getElementById("noticeTitle").value.trim();
+  const date = document.getElementById("noticeDate").value;
+  const message = document.getElementById("noticeMessage").value.trim();
+
+  if (!title || !message) {
+    alert("Please fill in the notice title and message.");
+    return;
+  }
+
+  db.ref("notices").push({ title, date, message })
+    .then(function () {
+      document.getElementById("noticeForm").reset();
+      alert("Notice published.");
+    })
+    .catch(function (err) {
+      alert("Could not publish notice: " + err.message);
+    });
+}
+
+function renderNoticeList() {
+  const list = document.getElementById("noticeList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (notices.length === 0) {
+    list.innerHTML = '<p style="color:#8891AC;">No notices published yet.</p>';
+    return;
+  }
+
+  notices
+    .slice()
+    .reverse()
+    .forEach(function (n) {
+      const card = document.createElement("div");
+      card.className = "notice-card";
+      card.innerHTML =
+        "<div class='notice-card-header'><strong>" + (n.title || "") + "</strong><span>" + (n.date || "") + "</span></div>" +
+        "<p>" + (n.message || "") + "</p>" +
+        '<button class="delete-btn" data-key="' + n.key + '"><i class="fa-solid fa-trash"></i></button>';
+      list.appendChild(card);
+    });
+
+  list.querySelectorAll(".delete-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (confirm("Delete this notice?")) {
+        db.ref("notices/" + btn.getAttribute("data-key")).remove();
+      }
+    });
+  });
+}
+
+// ---------- Gallery ----------
+
+function saveGalleryItem() {
+  const url = document.getElementById("galleryUrl").value.trim();
+  const caption = document.getElementById("galleryCaption").value.trim();
+
+  if (!url) {
+    alert("Please enter an image URL.");
+    return;
+  }
+
+  db.ref("gallery").push({ url, caption })
+    .then(function () {
+      document.getElementById("galleryForm").reset();
+    })
+    .catch(function (err) {
+      alert("Could not add to gallery: " + err.message);
+    });
+}
+
+function renderGalleryGrid() {
+  const grid = document.getElementById("galleryGrid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
+  if (gallery.length === 0) {
+    grid.innerHTML = '<p style="color:#8891AC;">No photos added yet.</p>';
+    return;
+  }
+
+  gallery.forEach(function (g) {
+    const item = document.createElement("div");
+    item.className = "gallery-item";
+    item.innerHTML =
+      '<img src="' + g.url + '" alt="' + (g.caption || "Gallery photo") + '">' +
+      "<p>" + (g.caption || "") + "</p>" +
+      '<button class="delete-btn" data-key="' + g.key + '"><i class="fa-solid fa-trash"></i></button>';
+    grid.appendChild(item);
+  });
+
+  grid.querySelectorAll(".delete-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (confirm("Remove this photo?")) {
+        db.ref("gallery/" + btn.getAttribute("data-key")).remove();
+      }
+    });
+  });
+}
+
+// ---------- Settings ----------
+
+function fillSettingsForm(settings) {
+  if (!settings) return;
+  const phone = document.getElementById("settingPhone");
+  const email = document.getElementById("settingEmail");
+  const timing = document.getElementById("settingTiming");
+  const admission = document.getElementById("settingAdmission");
+
+  if (phone && settings.phone) phone.value = settings.phone;
+  if (email && settings.email) email.value = settings.email;
+  if (timing && settings.timing) timing.value = settings.timing;
+  if (admission && settings.admission) admission.value = settings.admission;
+}
+
+function saveSettings() {
+  const settings = {
+    phone: document.getElementById("settingPhone").value.trim(),
+    email: document.getElementById("settingEmail").value.trim(),
+    timing: document.getElementById("settingTiming").value.trim(),
+    admission: document.getElementById("settingAdmission").value
+  };
+
+  db.ref("settings").set(settings)
+    .then(function () {
+      alert("Settings saved.");
+    })
+    .catch(function (err) {
+      alert("Could not save settings: " + err.message);
     });
 }
 
